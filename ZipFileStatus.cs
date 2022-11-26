@@ -1,7 +1,7 @@
 ﻿namespace ZipFiles
 {
     public delegate void ZipFileEventHandler(object sender, ZipFileEventArgs e);
-    internal class ZipFileEventArgs : EventArgs
+    public class ZipFileEventArgs : EventArgs
     {
         public int PercentageComplete { get; set; } = 0;
         public List<string> Archives { get; set; } = new();

@@ -35,7 +35,7 @@ namespace ZipFiles
             try
             {
                 var numOfFiles = filesPaths.Count();
-                for(int i = 0; i < filesPaths.Count(); i++)
+                for (int i = 0; i < filesPaths.Count(); i++)
                 {
                     var fileInfo = new FileInfo(filesPaths.ElementAt(i));
                     if (!fileInfo.Exists)
@@ -44,7 +44,7 @@ namespace ZipFiles
                     AddToArchive(fileInfo);
 
                     //
-                    SendProgress(currentFileIndex, numOfFiles);
+                    SendProgress(i + 1, numOfFiles);
                 }
             }
             catch (Exception e)
@@ -68,9 +68,14 @@ namespace ZipFiles
             };
         }
 
-        private void SendProgress(int currentFileIndex, int numOfFiles)
+        void SendProgress(int currentFileIndex, int numOfFiles)
         {
-            throw new NotImplementedException();
+            this.ZipProgressEvent?.Invoke(this, new ZipFileEventArgs
+            {
+                Archives = _archives,
+                Message = "",
+                PercentageComplete = (currentFileIndex * 100) / numOfFiles
+            });
         }
 
         private void DeleteExisitingArchives()
