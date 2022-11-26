@@ -37,7 +37,12 @@ void ZipFiles()
 
     var filesPaths = GetFilePaths(sourceFilesDirectory);
 
-    var zipFile = new ZipFileService(basePath).CompressFiles(filesPaths);
+    var zipFileService = new ZipFileService(basePath);
+    zipFileService.ZipProgressEvent += (s, e) =>
+    {
+        Console.WriteLine($"Progress - {e.PercentageComplete} %");
+    };
+    var zipFile = zipFileService.CompressFiles(filesPaths);
 
     Console.WriteLine($"Zipping Complete: {zipFile}");
 }

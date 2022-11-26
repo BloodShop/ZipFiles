@@ -5,6 +5,8 @@ namespace ZipFiles
 {
     internal class ZipFileService
     {
+        public event ZipFileEventHandler ZipProgressEvent;
+
         double _currentArchiveSize = 0;
         double _maxArchiveSize = 4.29 * 10e9;
         //double _maxArchiveSize = 2097152; // 2MB Approx
@@ -32,13 +34,17 @@ namespace ZipFiles
             bool isError = false;
             try
             {
-                foreach (var filePath in filesPaths)
+                var numOfFiles = filesPaths.Count();
+                for(int i = 0; i < filesPaths.Count(); i++)
                 {
-                    var fileInfo = new FileInfo(filePath);
+                    var fileInfo = new FileInfo(filesPaths.ElementAt(i));
                     if (!fileInfo.Exists)
                         continue;
 
                     AddToArchive(fileInfo);
+
+                    //
+                    SendProgress(currentFileIndex, numOfFiles);
                 }
             }
             catch (Exception e)
@@ -60,6 +66,11 @@ namespace ZipFiles
                 Success = !isError,
                 ZipFiles = _archives
             };
+        }
+
+        private void SendProgress(int currentFileIndex, int numOfFiles)
+        {
+            throw new NotImplementedException();
         }
 
         private void DeleteExisitingArchives()
