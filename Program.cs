@@ -1,4 +1,5 @@
 ﻿using System.IO.Compression;
+using ZipFiles;
 
 Console.WriteLine("Hello world! This is my zipping program!");
 
@@ -23,21 +24,22 @@ void DeleteExistingZipFiles()
 
 void ZipFiles()
 {
-    var sourceFilesDirectory = new List<string> { @"G:\SeLa\Self\ZipFiles\Zip\sounds" };
+    var workingDirectory = Environment.CurrentDirectory;
+    var basePath = Directory.GetParent(workingDirectory).Parent.Parent.FullName + "\\Zip";
+
+    var sourceFilesDirectory = new List<string> 
+    {
+        $@"{basePath}\sounds",
+        $@"{basePath}\sounds1",
+    };
 
     DeleteExistingZipFiles();
 
     var filesPaths = GetFilePaths(sourceFilesDirectory);
 
-    var zipFilename = @"G:\SeLa\Self\ZipFiles\Zip\MyZipFile.zip";
-    using var zip = ZipFile.Open(zipFilename, ZipArchiveMode.Create);
+    var zipFile = new ZipFileService(basePath).CompressFiles(filesPaths);
 
-    foreach (var filePath in filesPaths)
-    {
-        var filename = Path.GetFileName(filePath);
-        zip.CreateEntryFromFile(filePath, filename);
-    }
-
+    Console.WriteLine($"Zipping Complete: {zipFile}");
 }
 
 ZipFiles();
