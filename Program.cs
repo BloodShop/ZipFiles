@@ -40,11 +40,23 @@ void ZipFiles()
     var zipFileService = new ZipFileService(basePath);
     zipFileService.ZipProgressEvent += (s, e) =>
     {
-        Console.WriteLine($"Progress - {e.PercentageComplete} %");
+        //Console.WriteLine($"Progress - {e.PercentageComplete} %");
+        Utils.ShowProgressBar(e.PercentageComplete, 100);
     };
     var zipFile = zipFileService.CompressFiles(filesPaths);
 
     Console.WriteLine($"Zipping Complete: {zipFile}");
 }
+
+Console.Write("Performing some task... ");
+using (var progress = new ProgressBar())
+{
+    for (int i = 0; i <= 100; i++)
+    {
+        progress.Report((double)i / 100);
+        Thread.Sleep(20);
+    }
+}
+Console.WriteLine("Done.");
 
 ZipFiles();
