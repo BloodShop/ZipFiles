@@ -4,16 +4,16 @@ namespace ZipFiles
 {
     public class ProgressBar : IDisposable, IProgress<double>
     {
-        private const int blockCount = 10;
-        private readonly TimeSpan animationInterval = TimeSpan.FromSeconds(1.0 / 8);
-        private const string animation = @"|/-\";
+        const int blockCount = 10;
+        readonly TimeSpan animationInterval = TimeSpan.FromSeconds(1.0 / 8);
+        const string animation = @"|/-\";
 
-        private readonly Timer timer;
+        readonly Timer timer;
 
-        private double currentProgress = 0;
-        private string currentText = string.Empty;
-        private bool disposed = false;
-        private int animationIndex = 0;
+        double currentProgress = 0;
+        string currentText = string.Empty;
+        bool disposed = false;
+        int animationIndex = 0;
 
         public ProgressBar()
         {
@@ -23,9 +23,7 @@ namespace ZipFiles
             // If the console output is redirected to a file, draw nothing.
             // Otherwise, we'll end up with a lot of garbage in the target file.
             if (!Console.IsOutputRedirected)
-            {
                 ResetTimer();
-            }
         }
 
         public void Report(double value)
@@ -35,7 +33,7 @@ namespace ZipFiles
             Interlocked.Exchange(ref currentProgress, value);
         }
 
-        private void TimerHandler(object state)
+        void TimerHandler(object state)
         {
             lock (timer)
             {
@@ -53,7 +51,7 @@ namespace ZipFiles
             }
         }
 
-        private void UpdateText(string text)
+        void UpdateText(string text)
         {
             // Get length of common portion
             int commonPrefixLength = 0;
@@ -82,10 +80,7 @@ namespace ZipFiles
             currentText = text;
         }
 
-        private void ResetTimer()
-        {
-            timer.Change(animationInterval, TimeSpan.FromMilliseconds(-1));
-        }
+        void ResetTimer() => timer.Change(animationInterval, TimeSpan.FromMilliseconds(-1));
 
         public void Dispose()
         {
